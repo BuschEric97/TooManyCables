@@ -18,7 +18,7 @@ export default function App() {
   return (
     <main>
       <h1>Too Many Cables</h1>
-      <Link href="/">Home</Link>
+      <Link href="/"><button>Home</button></Link>
     </main>
   );
 }

@@ -20,10 +20,8 @@ export default function App() {
   return (
     <main>
       <h1>Too Many Cables</h1>
-      <Link href="/profile">Profile</Link>
-      <div>
+        <Link href="/profile"><button>Profile</button></Link>
         <button onClick={signOut}>Sign Out</button>
-      </div>
     </main>
   );
 }
