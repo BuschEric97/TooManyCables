@@ -1,6 +1,7 @@
 "use client";
 
-import { useAuthenticator, Authenticator } from "@aws-amplify/ui-react";
+import { useAuthenticator } from "@aws-amplify/ui-react";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
@@ -41,18 +42,7 @@ export default function App() {
   return (
     <main>
       <h1>Too Many Cables</h1>
-      <button onClick={createGame}>Add Game</button>
-      <ul>
-        {todos.map((todo) => (
-          <li
-            onClick={() => deleteGame(todo.id)}
-            key={todo.id}
-          >{todo.content}</li>
-        ))}
-      </ul>
-      <div>
-        <button onClick={signOut}>Sign Out</button>
-      </div>
+      <Link href="/">Home</Link>
     </main>
   );
 }
