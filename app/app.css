@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    background: #cec9cc;
+    background: #424242;
     display: flex;
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     height: 100vh;
@@ -22,13 +22,13 @@ body {
     font-size: 1em;
     font-weight: 500;
     font-family: inherit;
-    background-color: #4f43ae;
+    background-color: #fdbb31;
     cursor: pointer;
     transition: border-color 0.25s;
     color: black;
   }
   button:hover {
-    border-color: #b5b6e4;
+    border-color: #af7b18;
   }
   button:focus,
   button:focus-visible {
