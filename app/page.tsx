@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuthenticator, Authenticator } from "@aws-amplify/ui-react";
 import { useState, useEffect } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
@@ -13,6 +14,8 @@ Amplify.configure(outputs);
 const client = generateClient<Schema>();
 
 export default function App() {
+  const { signOut } = useAuthenticator();
+
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
 
   function listTodos() {
@@ -47,6 +50,9 @@ export default function App() {
           >{todo.content}</li>
         ))}
       </ul>
+      <div>
+        <button onClick={signOut}>Sign Out</button>
+      </div>
     </main>
   );
 }
