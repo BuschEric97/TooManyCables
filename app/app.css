@@ -1,6 +1,12 @@
+:root {
+  --tmc-background-color: #424242;
+  --tmc-primary-color: #4f43ae;
+  --tmc-secondary-color: #888ae2;
+}
+
 body {
     margin: 0;
-    background: #424242;
+    background: var(--tmc-background-color);
     display: flex;
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     height: 100vh;
@@ -22,13 +28,13 @@ body {
     font-size: 1em;
     font-weight: 500;
     font-family: inherit;
-    background-color: #fdbb31;
+    background-color: var(--tmc-primary-color);
     cursor: pointer;
     transition: border-color 0.25s;
     color: black;
   }
   button:hover {
-    border-color: #af7b18;
+    border-color: var(--tmc-secondary-color);
   }
   button:focus,
   button:focus-visible {
@@ -62,4 +68,15 @@ body {
   a {
     font-weight: 800;
     text-decoration: none;
+  }
+
+  [data-amplify-authenticator] {
+    --amplify-components-button-primary-background-color: var(--tmc-primary-color);
+    --amplify-components-button-primary-hover-background-color: var(--tmc-secondary-color);
+    --amplify-components-tabs-item-active-border-color: var(--tmc-primary-color);
+    --amplify-components-tabs-item-active-color: var(--tmc-primary-color);
+    --amplify-components-tabs-item-color: var(--tmc-secondary-color);
+    --amplify-components-tabs-item-hover-color: var(--tmc-primary-color);
+    --amplify-components-button-link-color: var(--tmc-secondary-color);
+    --amplify-components-button-link-hover-color: var(--tmc-primary-color);
   }

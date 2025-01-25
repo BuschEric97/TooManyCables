@@ -1,19 +1,14 @@
-"use client";
-
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./app.css";
-import { Authenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-/*
 export const metadata: Metadata = {
   title: "Too Many Cables",
   description: "A place to catalogue and tackle your backlog of video games!",
 };
-*/
 
 export default function RootLayout({
   children,
@@ -23,9 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Authenticator>
-          {children}
-        </Authenticator>
+        {children}
       </body>
     </html>
   );

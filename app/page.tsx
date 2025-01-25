@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuthenticator } from "@aws-amplify/ui-react";
+import { Authenticator } from "@aws-amplify/ui-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { generateClient } from "aws-amplify/data";
@@ -15,13 +15,10 @@ Amplify.configure(outputs);
 const client = generateClient<Schema>();
 
 export default function App() {
-  const { signOut } = useAuthenticator();
-
   return (
     <main>
-      <h1>Too Many Cables</h1>
+      <h1>Welcome to TMC!</h1>
         <Link href="/profile"><button>Profile</button></Link>
-        <button onClick={signOut}>Sign Out</button>
     </main>
   );
 }
