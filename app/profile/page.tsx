@@ -27,7 +27,6 @@ export default function App() {
   async function handleFetchUserAttributes() {
     try {
       const userAttributes = await fetchUserAttributes();
-      console.log(userAttributes);
 
       username = userAttributes.preferred_username as string;
       email = userAttributes.email as string;
@@ -71,7 +70,9 @@ export default function App() {
             <table>
               <tbody>
                 <tr>
-                  <td align="right">Preferred Username </td>
+                  <td align="right">
+                    <label>Username</label>
+                  </td>
                   <td align="left">
                     <input id="username" value={username} onChange={handlePreferredUsernameOnChange} />
                   </td>
@@ -80,7 +81,9 @@ export default function App() {
                   </td>
                 </tr>
                 <tr>
-                  <td align="right">Email </td>
+                  <td align="right">
+                    <label>Email</label>
+                  </td>
                   <td align="left">
                     <input id="email" readOnly value={email} />
                   </td>
