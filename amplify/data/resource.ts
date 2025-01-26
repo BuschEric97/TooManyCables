@@ -8,7 +8,7 @@ const schema = a.schema({
       collection: a.belongsTo("gamelist", "collectionId"),
       name: a.string().required(),
       platform: a.string(),
-      status: a.enum(["Not yet played", "Unfinished", "Completed", "100% Completed"]),
+      status: a.enum(["Unplayed", "Unfinished", "Completed", "FullyCompleted"]),
       notes: a.string(),
     })
     .identifier(["gameId"]),
