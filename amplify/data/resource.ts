@@ -4,6 +4,7 @@ const schema = a.schema({
   game: a
     .model({
       gameId: a.id().required(),
+      collectionId: a.id(),
       name: a.string().required(),
       platform: a.string(),
       status: a.string().required(),
@@ -12,7 +13,7 @@ const schema = a.schema({
     .identifier(["gameId"]),
   gamelist: a
     .model({
-      games: a.hasMany("game", "gameId"),
+      games: a.hasMany("game", "collectionId"),
       tags: a.string().array(),
       gamelistId: a.id().required(),
     })
