@@ -17,8 +17,16 @@ const schema = a.schema({
       games: a.hasMany("game", "collectionId"),
       tags: a.string().array(),
       gamelistId: a.id().required(),
+      collectionId: a.id(),
+      collection: a.belongsTo("usergamelists", "collectionId"),
     })
     .secondaryIndexes((index) => [index("gamelistId")]),
+  usergamelists: a
+    .model({
+      gamelists: a.hasMany("gamelist", "collectionId"),
+      userId: a.id().required(),
+    })
+    .identifier(["userId"]),
 })
 .authorization((allow) => [allow.publicApiKey()]);
 
