@@ -5,9 +5,10 @@ const schema = a.schema({
     .model({
       gameId: a.id().required(),
       collectionId: a.id(),
+      collection: a.belongsTo("gamelist", "collectionId"),
       name: a.string().required(),
       platform: a.string(),
-      status: a.string().required(),
+      status: a.enum(["Not yet played", "Unfinished", "Completed", "100% Completed"]),
       notes: a.string(),
     })
     .identifier(["gameId"]),
