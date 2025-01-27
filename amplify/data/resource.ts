@@ -24,9 +24,11 @@ const schema = a.schema({
   usergamelists: a
     .model({
       gamelists: a.hasMany("gamelist", "collectionId"),
+      listname: a.string().required(),
+      listId: a.id().required(),
       userId: a.id().required(),
     })
-    .identifier(["userId"]),
+    .identifier(["listId"]),
 })
 .authorization((allow) => [allow.publicApiKey()]);
 

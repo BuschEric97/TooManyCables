@@ -1,6 +1,5 @@
 "use client";
 
-import { Authenticator } from "@aws-amplify/ui-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { generateClient } from "aws-amplify/data";
@@ -18,7 +17,8 @@ export default function App() {
   return (
     <main>
       <h1>Welcome to TMC!</h1>
-        <Link href="/profile"><button>Profile</button></Link>
+      <Link href="/mylists"><button>My Game Lists</button></Link>
+      <Link href="/profile"><button>Profile</button></Link>
     </main>
   );
 }
