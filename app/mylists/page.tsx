@@ -20,8 +20,17 @@ const client = generateClient<Schema>();
 export default function App() {
   const [usergamelists, setUserGamelists] = useState<Array<Schema["usergamelists"]["type"]>>([]);
 
-  function listUserGameLists() {
-    client.models.usergamelists?.observeQuery().subscribe({
+  async function listUserGameLists() {
+    const userAttributes = await fetchUserAttributes();
+    const userId = userAttributes.sub as string;
+
+    client.models.usergamelists?.observeQuery(
+      {filter: {
+        userId: {
+          eq: userId
+        }
+      }}
+    ).subscribe({
       next: (data) => setUserGamelists([...data.items]),
     });
   }
@@ -43,7 +52,6 @@ export default function App() {
 
     try {
       const userAttributes = await fetchUserAttributes();
-
       const userId = userAttributes.sub as string;
 
       const newGameList = await client.models.usergamelists.create({
@@ -62,9 +70,22 @@ export default function App() {
         <div>
           <h1>My Game Lists</h1>
           <button onClick={handleCreateGameListButton}>New Game List</button>
-          {usergamelists.map((usergamelists) => (
-            <button onClick={() => openGameList(usergamelists.id)}>{usergamelists.listname}</button>
-          ))}
+          <div>
+            <table>
+              <tbody>
+                {usergamelists.map((usergamelists) => (
+                  <tr>
+                    <td align="right">
+                      <label>{usergamelists.listname}</label>
+                    </td>
+                    <td align="left">
+                      <button onClick={() => openGameList(usergamelists.id)}>Open</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </Authenticator>
       <Link href="/"><button>Home</button></Link>
