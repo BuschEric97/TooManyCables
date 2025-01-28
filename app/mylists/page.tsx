@@ -2,10 +2,7 @@
 
 import { Authenticator } from "@aws-amplify/ui-react";
 import {
-  fetchUserAttributes,
-  updateUserAttribute,
-  type UpdateUserAttributeOutput,
-  type UpdateUserAttributeInput,
+  fetchUserAttributes
 } from "@aws-amplify/auth";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -42,16 +39,18 @@ export default function App() {
   }
 
   async function createGameList(listname: string) {
+    console.log("Creating new game list with name: " + listname);
+
     try {
       const userAttributes = await fetchUserAttributes();
 
       const userId = userAttributes.sub as string;
 
-      client.models.usergamelists.create({
+      const newGameList = await client.models.usergamelists.create({
         listname: listname,
-        listId: "",
         userId: userId,
       });
+      console.log(newGameList);
     } catch (error) {
       console.log(error);
     }
@@ -64,7 +63,7 @@ export default function App() {
           <h1>My Game Lists</h1>
           <button onClick={handleCreateGameListButton}>New Game List</button>
           {usergamelists.map((usergamelists) => (
-            <button onClick={() => openGameList(usergamelists.listId)}>{usergamelists.listname}</button>
+            <button onClick={() => openGameList(usergamelists.id)}>{usergamelists.listname}</button>
           ))}
         </div>
       </Authenticator>
