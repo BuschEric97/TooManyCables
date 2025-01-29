@@ -14,12 +14,7 @@ const schema = a.schema({
     .model({
       games: a.hasMany("game", "collectionId"),
       tags: a.string().array(),
-      collectionId: a.id(),
-      collection: a.belongsTo("usergamelists", "collectionId"),
-    }),
-  usergamelists: a
-    .model({
-      gamelists: a.hasMany("gamelist", "collectionId"),
+      ispublic: a.boolean(),
       listname: a.string().required(),
       userId: a.id().required(),
     }),

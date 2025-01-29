@@ -18,13 +18,13 @@ Amplify.configure(outputs);
 const client = generateClient<Schema>();
 
 export default function App() {
-  const [usergamelists, setUserGamelists] = useState<Array<Schema["usergamelists"]["type"]>>([]);
+  const [gamelists, setUserGamelists] = useState<Array<Schema["gamelist"]["type"]>>([]);
 
   async function listUserGameLists() {
     const userAttributes = await fetchUserAttributes();
     const userId = userAttributes.sub as string;
 
-    client.models.usergamelists?.observeQuery(
+    client.models.gamelist?.observeQuery(
       {filter: {
         userId: {
           eq: userId
@@ -44,17 +44,19 @@ export default function App() {
   }
 
   function handleCreateGameListButton() {
-    createGameList(window.prompt("List Name") as string);
+    createGameList(window.prompt("List Name") as string, true, []);
   }
 
-  async function createGameList(listname: string) {
+  async function createGameList(listname: string, ispublic: boolean, tags: string[]) {
     console.log("Creating new game list with name: " + listname);
 
     try {
       const userAttributes = await fetchUserAttributes();
       const userId = userAttributes.sub as string;
 
-      const newGameList = await client.models.usergamelists.create({
+      const newGameList = await client.models.gamelist.create({
+        ispublic: ispublic,
+        tags: tags,
         listname: listname,
         userId: userId,
       });
@@ -73,13 +75,13 @@ export default function App() {
           <div>
             <table>
               <tbody>
-                {usergamelists.map((usergamelists) => (
+                {gamelists.map((gamelists) => (
                   <tr>
                     <td align="right">
-                      <label>{usergamelists.listname}</label>
+                      <label>{gamelists.listname}</label>
                     </td>
                     <td align="left">
-                      <button onClick={() => openGameList(usergamelists.id)}>Open</button>
+                      <button onClick={() => openGameList(gamelists.id)}>Open</button>
                     </td>
                   </tr>
                 ))}
