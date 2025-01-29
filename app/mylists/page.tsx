@@ -39,10 +39,6 @@ export default function App() {
     listUserGameLists();
   }, []);
 
-  function openGameList(listId: string) {
-    console.log(listId);
-  }
-
   function handleCreateGameListButton() {
     createGameList(window.prompt("List Name") as string, true, []);
   }
@@ -81,7 +77,14 @@ export default function App() {
                       <label>{gamelists.listname}</label>
                     </td>
                     <td align="left">
-                      <button onClick={() => openGameList(gamelists.id)}>Open</button>
+                      <Link
+                        href={{
+                          pathname: "/gamelist",
+                          query: { id: gamelists.id },
+                        }}
+                      >
+                        <button>Open</button>
+                      </Link>
                     </td>
                   </tr>
                 ))}
