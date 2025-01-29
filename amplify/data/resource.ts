@@ -7,7 +7,10 @@ const schema = a.schema({
       collection: a.belongsTo("gamelist", "collectionId"),
       name: a.string().required(),
       platform: a.string(),
-      status: a.enum(["Unplayed", "Unfinished", "Completed", "FullyCompleted"]),
+      // NYP = Not Yet Played, UNF = Unfinished
+      // CPL = Completed, FPL = Fully 100% Completed
+      // NDL = Endless (Cannot be Finished)
+      status: a.enum(["NYP", "UNF", "CPL", "FPL", "NDL"]),
       notes: a.string(),
     }),
   gamelist: a

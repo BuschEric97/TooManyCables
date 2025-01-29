@@ -60,6 +60,29 @@ input:read-only {
   cursor: default;
 }
 
+select {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--tmc-input-background-color);
+  color: black;
+}
+
+textarea {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--tmc-input-background-color);
+  color: black;
+  resize: none;
+}
+
 label {
   padding: 0.6em 1.2em;
   font-size: 1em;

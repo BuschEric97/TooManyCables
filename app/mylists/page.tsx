@@ -50,7 +50,7 @@ export default function App() {
       const userAttributes = await fetchUserAttributes();
       const userId = userAttributes.sub as string;
 
-      const newGameList = await client.models.gamelist.create({
+      await client.models.gamelist.create({
         ispublic: ispublic,
         tags: tags,
         listname: listname,
