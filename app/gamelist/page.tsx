@@ -5,7 +5,7 @@ import {
   fetchUserAttributes
 } from "@aws-amplify/auth";
 import { useSearchParams } from "next/navigation";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
 import "./../../app/app.css";
@@ -61,17 +61,15 @@ export default function App() {
   }
 
   return (
-    <Suspense>
-      <main>
-        <h1>TMC Game List Viewer</h1>
-          <button onClick={handleCreateGameButton}>New Game</button>
-          <div>
-            {games.map((games) => (
-              <div>{games.name}</div>
-            ))}
-          </div>
-        <Link href="/"><button>Home</button></Link>
-      </main>
-    </Suspense>
+    <main>
+      <h1>TMC Game List Viewer</h1>
+        <button onClick={handleCreateGameButton}>New Game</button>
+        <div>
+          {games.map((games) => (
+            <div>{games.name}</div>
+          ))}
+        </div>
+      <Link href="/"><button>Home</button></Link>
+    </main>
   );
 }
