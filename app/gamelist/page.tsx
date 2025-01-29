@@ -61,17 +61,17 @@ export default function App() {
   }
 
   return (
-    <main>
-      <h1>TMC Game List Viewer</h1>
-      <Suspense>
-        <button onClick={handleCreateGameButton}>New Game</button>
-        <div>
-          {games.map((games) => (
-            <div>{games.name}</div>
-          ))}
-        </div>
-      </Suspense>
-      <Link href="/"><button>Home</button></Link>
-    </main>
+    <Suspense>
+      <main>
+        <h1>TMC Game List Viewer</h1>
+          <button onClick={handleCreateGameButton}>New Game</button>
+          <div>
+            {games.map((games) => (
+              <div>{games.name}</div>
+            ))}
+          </div>
+        <Link href="/"><button>Home</button></Link>
+      </main>
+    </Suspense>
   );
 }
