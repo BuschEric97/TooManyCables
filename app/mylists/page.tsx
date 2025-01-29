@@ -40,7 +40,16 @@ export default function App() {
   }, []);
 
   function handleCreateGameListButton() {
-    createGameList(window.prompt("List Name") as string, true, []);
+    const gameListName = (document.getElementById("newGameListName") as HTMLInputElement).value;
+    const gameListIsPublic = !(document.getElementById("newGameListIsPrivate") as HTMLInputElement).checked;
+
+    if (gameListName == "") {
+      console.log("Game List Name cannot be empty!");
+      window.alert("Game List Name cannot be empty!");
+      return;
+    }
+
+    createGameList(gameListName, gameListIsPublic, []);
   }
 
   async function createGameList(listname: string, ispublic: boolean, tags: string[]) {
@@ -66,7 +75,33 @@ export default function App() {
       <Authenticator signUpAttributes={["preferred_username"]}>
         <div>
           <h1>My Game Lists</h1>
-          <button onClick={handleCreateGameListButton}>New Game List</button>
+          <div>
+            <table>
+              <tbody>
+                <tr>
+                  <td align="right">
+                    <label>Game List Name</label>
+                  </td>
+                  <td align="left">
+                    <input id="newGameListName" />
+                  </td>
+                </tr>
+                <tr>
+                  <td align="right">
+                    <label>Private Game List</label>
+                  </td>
+                  <td align="left">
+                    <input type="checkbox" id="newGameListIsPrivate" />
+                  </td>
+                </tr>
+                <tr>
+                  <td colSpan={2} align="center">
+                    <button onClick={handleCreateGameListButton}>Add Game List</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <div>
             <table>
               <tbody>

@@ -195,7 +195,7 @@ export default function App() {
             </tr>
             <tr>
               <td colSpan={2} align="center">
-                <button onClick={handleCreateGameButton}>New Game</button>
+                <button onClick={handleCreateGameButton}>Add Game</button>
               </td>
             </tr>
           </tbody>
