@@ -56,7 +56,6 @@ export default function App() {
         listname: listname,
         userId: userId,
       });
-      console.log(newGameList);
     } catch (error) {
       console.log(error);
     }
