@@ -12,6 +12,7 @@ import "./../../app/app.css";
 import { Amplify } from "aws-amplify";
 import outputs from "@/amplify_outputs.json";
 import "@aws-amplify/ui-react/styles.css";
+import { HtmlContext } from "next/dist/server/future/route-modules/app-page/vendored/contexts/entrypoints";
 
 Amplify.configure(outputs);
 
@@ -70,6 +71,21 @@ export default function App() {
     }
   }
 
+  function handleDeleteGameListButton(e: React.MouseEvent<HTMLButtonElement>) {
+    const gameListId = (e.target as HTMLButtonElement).id;
+    deleteGameList(gameListId);
+  }
+
+  async function deleteGameList(listId: string) {
+    console.log("Deleting game list with id: " + listId);
+
+    try {
+      await client.models.gamelist.delete({ id: listId });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <main>
       <Authenticator signUpAttributes={["preferred_username"]}>
@@ -119,6 +135,11 @@ export default function App() {
                       >
                         <button>Open</button>
                       </Link>
+                    </td>
+                    <td align="left">
+                      <button id={gamelists.id} onClick={handleDeleteGameListButton}>
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))}
