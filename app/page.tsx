@@ -17,8 +17,6 @@ export default function App() {
   return (
     <main>
       <h1>Welcome to TMC!</h1>
-      <Link href="/mylists"><button>My Game Lists</button></Link>
-      <Link href="/profile"><button>Profile</button></Link>
     </main>
   );
 }

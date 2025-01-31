@@ -206,7 +206,6 @@ export default function App() {
           <div>{games.name}</div>
         ))}
       </div>
-      <Link href="/"><button>Home</button></Link>
     </main>
   );
 }

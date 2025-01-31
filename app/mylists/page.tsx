@@ -202,7 +202,6 @@ export default function App() {
           </div>
         </div>
       </Authenticator>
-      <Link href="/"><button>Home</button></Link>
     </main>
   );
 }

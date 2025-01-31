@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Suspense } from "react";
+import Link from "next/link";
 import "./app.css";
+import Navbar from "./components/navbar/Navbar"
 import "@aws-amplify/ui-react/styles.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -20,6 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Suspense>
+          <Navbar />
           {children}
         </Suspense>
       </body>

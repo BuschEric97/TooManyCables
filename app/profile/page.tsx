@@ -94,7 +94,6 @@ export default function App() {
           </div>
         )}
       </Authenticator>
-      <Link href="/"><button>Home</button></Link>
     </main>
   );
 }
