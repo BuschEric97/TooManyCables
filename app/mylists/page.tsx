@@ -56,6 +56,8 @@ export default function App() {
   async function createGameList(listname: string, ispublic: boolean, tags: string[]) {
     console.log("Creating new game list with name: " + listname);
 
+    //TODO: Add check to prevent duplicate creation of gamelists
+
     try {
       const userAttributes = await fetchUserAttributes();
       const userId = userAttributes.sub as string;
@@ -73,7 +75,31 @@ export default function App() {
 
   function handleDeleteGameListButton(e: React.MouseEvent<HTMLButtonElement>) {
     const gameListId = (e.target as HTMLButtonElement).id;
+    deleteGamesByGameListId(gameListId);
     deleteGameList(gameListId);
+  }
+
+  async function deleteGamesByGameListId(listId: string) {
+    console.log("Deleting all games belonging to game list with id: " + listId);
+
+    try {
+      let games = await client.models.game.list({
+        filter: {
+          collectionId: {
+            eq: listId
+          }
+        }
+      });
+
+      games.data.forEach(async (game) => {
+        console.log("Deleting game with id: " + game.id);
+        await client.models.game.delete({
+          id: game.id
+        });
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async function deleteGameList(listId: string) {
