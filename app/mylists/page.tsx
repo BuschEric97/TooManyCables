@@ -1,9 +1,7 @@
 "use client";
 
 import { Authenticator } from "@aws-amplify/ui-react";
-import {
-  fetchUserAttributes
-} from "@aws-amplify/auth";
+import { fetchUserAttributes } from "@aws-amplify/auth";
 import Link from "next/link";
 import { useState, useEffect, useRef, RefObject } from "react";
 import { generateClient } from "aws-amplify/data";
@@ -43,16 +41,18 @@ export default function App() {
 
   async function handleCreateGameListButton() {
     if (addListButtonRef.current) {
-      console.log(addListButtonRef.current.getAttribute("disabled"));
+      // Cancel processing if game list is already being created
       if (addListButtonRef.current.getAttribute("disabled")) {
         return;
       }
 
       addListButtonRef.current.setAttribute("disabled", "disabled");
 
+      // Get game list creation parameters
       const gameListName = (document.getElementById("newGameListName") as HTMLInputElement).value;
       const gameListIsPublic = !(document.getElementById("newGameListIsPrivate") as HTMLInputElement).checked;
 
+      // Check that game list name is populated
       if (gameListName == "") {
         console.log("Game List Name cannot be empty!");
         window.alert("Game List Name cannot be empty!");
@@ -60,6 +60,7 @@ export default function App() {
         return;
       }
 
+      // Check that game list name is not a duplicate
       let isDuplicate: boolean = false;
       gamelists.forEach((gamelist) => {
         if (gamelist.listname === gameListName) {
@@ -82,8 +83,6 @@ export default function App() {
   async function createGameList(listname: string, ispublic: boolean, tags: string[]) {
     console.log("Creating new game list with name: " + listname);
 
-    //TODO: Add check to prevent duplicate creation of gamelists
-
     try {
       const userAttributes = await fetchUserAttributes();
       const userId = userAttributes.sub as string;
@@ -102,7 +101,9 @@ export default function App() {
   function handleDeleteGameListButton(e: React.MouseEvent<HTMLButtonElement>) {
     const gameListId = (e.target as HTMLButtonElement).id;
 
+    // Delete all games associated with the list
     deleteGamesByGameListId(gameListId);
+    // Then delete the list itself
     deleteGameList(gameListId);
   }
 
