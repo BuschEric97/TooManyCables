@@ -5,7 +5,7 @@ import {
   fetchUserAttributes
 } from "@aws-amplify/auth";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, RefObject } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
 import "./../../app/app.css";
@@ -20,6 +20,7 @@ const client = generateClient<Schema>();
 
 export default function App() {
   const [gamelists, setUserGamelists] = useState<Array<Schema["gamelist"]["type"]>>([]);
+  let addListButtonRef = useRef<HTMLButtonElement>();
 
   async function listUserGameLists() {
     const userAttributes = await fetchUserAttributes();
@@ -40,29 +41,42 @@ export default function App() {
     listUserGameLists();
   }, []);
 
-  function handleCreateGameListButton() {
-    const gameListName = (document.getElementById("newGameListName") as HTMLInputElement).value;
-    const gameListIsPublic = !(document.getElementById("newGameListIsPrivate") as HTMLInputElement).checked;
-
-    if (gameListName == "") {
-      console.log("Game List Name cannot be empty!");
-      window.alert("Game List Name cannot be empty!");
-      return;
-    }
-
-    let isDuplicate: boolean = false;
-    gamelists.forEach((gamelist) => {
-      if (gamelist.listname === gameListName) {
-        isDuplicate = true;
+  async function handleCreateGameListButton() {
+    if (addListButtonRef.current) {
+      console.log(addListButtonRef.current.getAttribute("disabled"));
+      if (addListButtonRef.current.getAttribute("disabled")) {
+        return;
       }
-    });
-    if (isDuplicate) {
-      console.log("You already have a game list with that name!");
-      window.alert("You already have a game list with that name!");
-      return;
-    }
 
-    createGameList(gameListName, gameListIsPublic, []);
+      addListButtonRef.current.setAttribute("disabled", "disabled");
+
+      const gameListName = (document.getElementById("newGameListName") as HTMLInputElement).value;
+      const gameListIsPublic = !(document.getElementById("newGameListIsPrivate") as HTMLInputElement).checked;
+
+      if (gameListName == "") {
+        console.log("Game List Name cannot be empty!");
+        window.alert("Game List Name cannot be empty!");
+        addListButtonRef.current.removeAttribute("disabled");
+        return;
+      }
+
+      let isDuplicate: boolean = false;
+      gamelists.forEach((gamelist) => {
+        if (gamelist.listname === gameListName) {
+          isDuplicate = true;
+        }
+      });
+      if (isDuplicate) {
+        console.log("You already have a game list with that name!");
+        window.alert("You already have a game list with that name!");
+        addListButtonRef.current.removeAttribute("disabled");
+        return;
+      }
+
+      await createGameList(gameListName, gameListIsPublic, []);
+
+      addListButtonRef.current.removeAttribute("disabled");
+    }
   }
 
   async function createGameList(listname: string, ispublic: boolean, tags: string[]) {
@@ -87,7 +101,7 @@ export default function App() {
 
   function handleDeleteGameListButton(e: React.MouseEvent<HTMLButtonElement>) {
     const gameListId = (e.target as HTMLButtonElement).id;
-    
+
     deleteGamesByGameListId(gameListId);
     deleteGameList(gameListId);
   }
@@ -151,7 +165,7 @@ export default function App() {
                 </tr>
                 <tr>
                   <td colSpan={2} align="center">
-                    <button onClick={handleCreateGameListButton}>Add Game List</button>
+                    <button ref={addListButtonRef as RefObject<HTMLButtonElement>} onClick={handleCreateGameListButton}>Add Game List</button>
                   </td>
                 </tr>
               </tbody>
