@@ -50,6 +50,18 @@ export default function App() {
       return;
     }
 
+    let isDuplicate: boolean = false;
+    gamelists.forEach((gamelist) => {
+      if (gamelist.listname === gameListName) {
+        isDuplicate = true;
+      }
+    });
+    if (isDuplicate) {
+      console.log("You already have a game list with that name!");
+      window.alert("You already have a game list with that name!");
+      return;
+    }
+
     createGameList(gameListName, gameListIsPublic, []);
   }
 
@@ -75,6 +87,7 @@ export default function App() {
 
   function handleDeleteGameListButton(e: React.MouseEvent<HTMLButtonElement>) {
     const gameListId = (e.target as HTMLButtonElement).id;
+    
     deleteGamesByGameListId(gameListId);
     deleteGameList(gameListId);
   }
