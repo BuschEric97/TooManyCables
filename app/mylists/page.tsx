@@ -110,10 +110,12 @@ export default function App() {
   function handleDeleteGameListButton(e: React.MouseEvent<HTMLButtonElement>) {
     const gameListId = (e.target as HTMLButtonElement).id;
 
-    // Delete all games associated with the list
-    deleteGamesByGameListId(gameListId);
-    // Then delete the list itself
-    deleteGameList(gameListId);
+    if (window.confirm("Are you sure?")) {
+      // Delete all games associated with the list
+      deleteGamesByGameListId(gameListId);
+      // Then delete the list itself
+      deleteGameList(gameListId);
+    }
   }
 
   async function deleteGamesByGameListId(listId: string) {

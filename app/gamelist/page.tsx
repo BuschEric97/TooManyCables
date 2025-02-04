@@ -129,7 +129,10 @@ export default function App() {
 
   function handleDeleteGameButton(e: React.MouseEvent<HTMLButtonElement>) {
     const gameId = (e.target as HTMLButtonElement).name;
-    deleteGame(gameId);
+
+    if (window.confirm("Are you sure?")) {
+      deleteGame(gameId);
+    }
   }
 
   async function deleteGame(gameId: string) {
