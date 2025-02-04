@@ -35,8 +35,8 @@ export default function App() {
         </div>
       </Link>
       {navItems.map((item) => (
-          <Link href={item.href}>
-            <div key={item.id} className="navBarItem">
+          <Link key={item.id} href={item.href}>
+            <div className="navBarItem">
               {item.label}
             </div>
           </Link>

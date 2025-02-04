@@ -150,7 +150,7 @@ export default function App() {
           <table>
             <tbody>
               {games.map((games) => (
-                <tr>
+                <tr key={games.id}>
                   <td align="right">
                     <label>{games.name}</label>
                   </td>
