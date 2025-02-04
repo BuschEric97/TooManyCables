@@ -5,7 +5,7 @@ import {
   fetchUserAttributes
 } from "@aws-amplify/auth";
 import { useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
 import "./../../app/app.css";
@@ -39,6 +39,15 @@ export default function App() {
   useEffect(() => {
     listListGames();
   }, []);
+
+  function handleAddGameCollapse() {
+    let content = document.getElementById("sectionAddNewGame") as HTMLButtonElement;
+    if (content?.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content!.style.display = "block";
+    }
+  }
 
   function handleCreateGameButton() {
     const gameName = (document.getElementById("newGameName") as HTMLInputElement).value;
@@ -113,98 +122,141 @@ export default function App() {
     }
   }
 
+  function handleOpenGameButton(e: React.MouseEvent<HTMLButtonElement>) {
+    const gameId = (e.target as HTMLButtonElement).name;
+    console.log(gameId);
+  }
+
+  function handleDeleteGameButton(e: React.MouseEvent<HTMLButtonElement>) {
+    const gameId = (e.target as HTMLButtonElement).name;
+    deleteGame(gameId);
+  }
+
+  async function deleteGame(gameId: string) {
+    console.log("Deleting game with id: " + gameId);
+
+    try {
+      await client.models.game.delete({ id: gameId });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <main>
-      <h1>TMC Game List Viewer</h1>
       <div>
-        <table>
-          <tbody>
-            <tr>
-              <td align="right">
-                <label>Game Name</label>
-              </td>
-              <td align="left">
-                <input id="newGameName" />
-              </td>
-            </tr>
-            <tr>
-              <td align="right">
-                <label>Platform</label>
-              </td>
-              <td align="left">
-                <select id="newGamePlatform">
-                  <option value="">--Please select an Option--</option>
-                  <option value="OTHER">--Other--</option>
-                  <option value="NES">NES</option>
-                  <option value="SNES">SNES</option>
-                  <option value="N64">Nintendo 64</option>
-                  <option value="GCN">GameCube</option>
-                  <option value="WII">Wii</option>
-                  <option value="WIIU">Wii U</option>
-                  <option value="NSW">Nintendo Switch</option>
-                  <option value="NSW2">Nintendo Switch 2</option>
-                  <option value="GB">Game Boy</option>
-                  <option value="GBC">Game Boy Color</option>
-                  <option value="VB">Virtual Boy</option>
-                  <option value="GBA">Game Boy Advance</option>
-                  <option value="DS">Nintendo DS</option>
-                  <option value="3DS">Nintendo 3DS</option>
-                  <option value="N3DS">New Nintendo 3DS</option>
-                  <option value="PS1">PlayStation</option>
-                  <option value="PS2">PlayStation 2</option>
-                  <option value="PS3">PlayStation 3</option>
-                  <option value="PS4">PlayStation 4</option>
-                  <option value="PS5">PlayStation 5</option>
-                  <option value="PSP">PlayStation Portable</option>
-                  <option value="PSVT">PlayStation Vita</option>
-                  <option value="XBOX">Original Xbox</option>
-                  <option value="X360">Xbox 360</option>
-                  <option value="XBX1">Xbox One</option>
-                  <option value="XBXS">Xbox Series X|S</option>
-                  <option value="SMS">Sega Master System</option>
-                  <option value="SGNS">Sega Genesis</option>
-                  <option value="STRN">Sega Saturn</option>
-                  <option value="DCST">Sega Dreamcast</option>
-                  <option value="SGG">Sega Game Gear</option>
-                  <option value="PC">PC Game</option>
-                  <option value="STM">Steam</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td align="right">
-                <label>Completion Status</label>
-              </td>
-              <td align="left">
-                <select id="newGameStatus">
-                  <option value="NYP">Unplayed</option>
-                  <option value="UNF">Unfinished</option>
-                  <option value="CPL">Completed</option>
-                  <option value="FPL">100% Completed</option>
-                  <option value="NDL">Endless</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td align="right">
-                <label>Notes</label>
-              </td>
-              <td align="left">
-                <textarea rows={10} cols={30} id="newGameNotes" />
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={2} align="center">
-                <button onClick={handleCreateGameButton}>Add Game</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div>
-        {games.map((games) => (
-          <div>{games.name}</div>
-        ))}
+        <h1>TMC Game List Viewer</h1>
+        <div id="sectionGameList">
+          <table>
+            <tbody>
+              {games.map((games) => (
+                <tr>
+                  <td align="right">
+                    <label>{games.name}</label>
+                  </td>
+                  <td align="left">
+                    <button name={games.id} onClick={handleOpenGameButton}>
+                      Open
+                    </button>
+                  </td>
+                  <td align="left">
+                    <button name={games.id} onClick={handleDeleteGameButton}>
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <button id="buttonAddNewGame" className="collapsible" onClick={handleAddGameCollapse}>
+          Add New Game
+        </button>
+        <div id="sectionAddNewGame" className="collapsible">
+          <table>
+            <tbody>
+              <tr>
+                <td align="right">
+                  <label>Game Name</label>
+                </td>
+                <td align="left">
+                  <input id="newGameName" />
+                </td>
+              </tr>
+              <tr>
+                <td align="right">
+                  <label>Platform</label>
+                </td>
+                <td align="left">
+                  <select id="newGamePlatform">
+                    <option value="">--Please select an Option--</option>
+                    <option value="OTHER">--Other--</option>
+                    <option value="NES">NES</option>
+                    <option value="SNES">SNES</option>
+                    <option value="N64">Nintendo 64</option>
+                    <option value="GCN">GameCube</option>
+                    <option value="WII">Wii</option>
+                    <option value="WIIU">Wii U</option>
+                    <option value="NSW">Nintendo Switch</option>
+                    <option value="NSW2">Nintendo Switch 2</option>
+                    <option value="GB">Game Boy</option>
+                    <option value="GBC">Game Boy Color</option>
+                    <option value="VB">Virtual Boy</option>
+                    <option value="GBA">Game Boy Advance</option>
+                    <option value="DS">Nintendo DS</option>
+                    <option value="3DS">Nintendo 3DS</option>
+                    <option value="N3DS">New Nintendo 3DS</option>
+                    <option value="PS1">PlayStation</option>
+                    <option value="PS2">PlayStation 2</option>
+                    <option value="PS3">PlayStation 3</option>
+                    <option value="PS4">PlayStation 4</option>
+                    <option value="PS5">PlayStation 5</option>
+                    <option value="PSP">PlayStation Portable</option>
+                    <option value="PSVT">PlayStation Vita</option>
+                    <option value="XBOX">Original Xbox</option>
+                    <option value="X360">Xbox 360</option>
+                    <option value="XBX1">Xbox One</option>
+                    <option value="XBXS">Xbox Series X|S</option>
+                    <option value="SMS">Sega Master System</option>
+                    <option value="SGNS">Sega Genesis</option>
+                    <option value="STRN">Sega Saturn</option>
+                    <option value="DCST">Sega Dreamcast</option>
+                    <option value="SGG">Sega Game Gear</option>
+                    <option value="PC">PC Game</option>
+                    <option value="STM">Steam</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td align="right">
+                  <label>Completion Status</label>
+                </td>
+                <td align="left">
+                  <select id="newGameStatus">
+                    <option value="NYP">Unplayed</option>
+                    <option value="UNF">Unfinished</option>
+                    <option value="CPL">Completed</option>
+                    <option value="FPL">100% Completed</option>
+                    <option value="NDL">Endless</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td align="right">
+                  <label>Notes</label>
+                </td>
+                <td align="left">
+                  <textarea rows={10} cols={30} id="newGameNotes" />
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={2} align="center">
+                  <button onClick={handleCreateGameButton}>Add Game</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </main>
   );

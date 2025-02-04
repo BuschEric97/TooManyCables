@@ -69,6 +69,12 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+div.collapsible {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+}
+
 input {
   border-radius: 8px;
   border: 1px solid transparent;

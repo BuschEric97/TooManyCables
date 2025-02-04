@@ -39,6 +39,15 @@ export default function App() {
     listUserGameLists();
   }, []);
 
+  function handleAddGameListCollapse() {
+    let content = document.getElementById("sectionAddNewGameList") as HTMLButtonElement;
+    if (content?.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content!.style.display = "block";
+    }
+  }
+
   async function handleCreateGameListButton() {
     if (addListButtonRef.current) {
       // Cancel processing if game list is already being created
@@ -145,34 +154,7 @@ export default function App() {
       <Authenticator signUpAttributes={["preferred_username"]}>
         <div>
           <h1>My Game Lists</h1>
-          <div>
-            <table>
-              <tbody>
-                <tr>
-                  <td align="right">
-                    <label>Game List Name</label>
-                  </td>
-                  <td align="left">
-                    <input id="newGameListName" />
-                  </td>
-                </tr>
-                <tr>
-                  <td align="right">
-                    <label>Private Game List</label>
-                  </td>
-                  <td align="left">
-                    <input type="checkbox" id="newGameListIsPrivate" />
-                  </td>
-                </tr>
-                <tr>
-                  <td colSpan={2} align="center">
-                    <button ref={addListButtonRef as RefObject<HTMLButtonElement>} onClick={handleCreateGameListButton}>Add Game List</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div>
+          <div id="sectionGameListList">
             <table>
               <tbody>
                 {gamelists.map((gamelists) => (
@@ -197,6 +179,36 @@ export default function App() {
                     </td>
                   </tr>
                 ))}
+              </tbody>
+            </table>
+          </div>
+          <button id="buttonAddNewGameList" className="collapsible" onClick={handleAddGameListCollapse}>
+            Add New Game List
+          </button>
+          <div id="sectionAddNewGameList" className="collapsible">
+            <table>
+              <tbody>
+                <tr>
+                  <td align="right">
+                    <label>Game List Name</label>
+                  </td>
+                  <td align="left">
+                    <input id="newGameListName" />
+                  </td>
+                </tr>
+                <tr>
+                  <td align="right">
+                    <label>Private Game List</label>
+                  </td>
+                  <td align="left">
+                    <input type="checkbox" id="newGameListIsPrivate" />
+                  </td>
+                </tr>
+                <tr>
+                  <td colSpan={2} align="center">
+                    <button ref={addListButtonRef as RefObject<HTMLButtonElement>} onClick={handleCreateGameListButton}>Add Game List</button>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
