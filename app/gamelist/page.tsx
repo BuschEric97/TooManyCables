@@ -1,19 +1,20 @@
 "use client";
 
-import Link from "next/link";
-import {
-  fetchUserAttributes
-} from "@aws-amplify/auth";
 import { useSearchParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
 import "./../../app/app.css";
-import { platformList, statusList } from "./../../app/functions";
+import {
+  platformList,
+  statusList,
+  createGame,
+  editGame,
+  deleteGame,
+} from "./../../app/common";
 import { Amplify } from "aws-amplify";
 import outputs from "@/amplify_outputs.json";
 import "@aws-amplify/ui-react/styles.css";
-import { EnumType } from "@aws-amplify/data-schema";
 
 Amplify.configure(outputs);
 
@@ -62,65 +63,7 @@ export default function App() {
       return;
     }
 
-    createGame(gameName, gamePlatform, gameStatus, gameNotes);
-  }
-
-  async function createGame(name: string, platform: string, status: string, notes: string) {
-    console.log("Creating new game with name: " + name);
-
-    try {
-      switch (status) {
-        case "NYP":
-          await client.models.game.create({
-            name: name,
-            platform: platform,
-            status: "NYP",
-            notes: notes,
-            collectionId: listId,
-          });
-          break;
-        case "UNF":
-          await client.models.game.create({
-            name: name,
-            platform: platform,
-            status: "UNF",
-            notes: notes,
-            collectionId: listId,
-          });
-          break;
-        case "CPL":
-          await client.models.game.create({
-            name: name,
-            platform: platform,
-            status: "CPL",
-            notes: notes,
-            collectionId: listId,
-          });
-          break;
-        case "FPL":
-          await client.models.game.create({
-            name: name,
-            platform: platform,
-            status: "FPL",
-            notes: notes,
-            collectionId: listId,
-          });
-          break;
-        case "NDL":
-          await client.models.game.create({
-            name: name,
-            platform: platform,
-            status: "NDL",
-            notes: notes,
-            collectionId: listId,
-          });
-          break;
-        default:
-          console.log("Unknown status entered: " + status);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    createGame(listId, gameName, gamePlatform, gameStatus, gameNotes);
   }
 
   async function handleOpenGameButton(e: React.MouseEvent<HTMLButtonElement>) {
@@ -162,79 +105,11 @@ export default function App() {
     editGame(gameId.value, gameName.value, gamePlatform.value, gameStatus.value, gameNotes.value);
   }
 
-  async function editGame(gameId: string, gameName: string, gamePlatform: string, gameStatus: string, gameNotes: string) {
-    console.log("Updating game with id: " + gameId);
-
-    try {
-      switch (gameStatus) {
-        case "NYP":
-          await client.models.game.update({
-            id: gameId,
-            platform: gamePlatform,
-            status: "NYP",
-            notes: gameNotes,
-            name: gameName,
-          })
-          break;
-        case "UNF":
-          await client.models.game.update({
-            id: gameId,
-            platform: gamePlatform,
-            status: "UNF",
-            notes: gameNotes,
-            name: gameName,
-          })
-          break;
-        case "CPL":
-          await client.models.game.update({
-            id: gameId,
-            platform: gamePlatform,
-            status: "CPL",
-            notes: gameNotes,
-            name: gameName,
-          })
-          break;
-        case "FPL":
-          await client.models.game.update({
-            id: gameId,
-            platform: gamePlatform,
-            status: "FPL",
-            notes: gameNotes,
-            name: gameName,
-          })
-          break;
-        case "NDL":
-          await client.models.game.update({
-            id: gameId,
-            platform: gamePlatform,
-            status: "NDL",
-            notes: gameNotes,
-            name: gameName,
-          })
-          break;
-        default:
-          console.log("Unknown status entered: " + status);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   function handleDeleteGameButton(e: React.MouseEvent<HTMLButtonElement>) {
     const gameId = (e.target as HTMLButtonElement).name;
 
     if (window.confirm("Are you sure?")) {
       deleteGame(gameId);
-    }
-  }
-
-  async function deleteGame(gameId: string) {
-    console.log("Deleting game with id: " + gameId);
-
-    try {
-      await client.models.game.delete({ id: gameId });
-    } catch (error) {
-      console.log(error);
     }
   }
 

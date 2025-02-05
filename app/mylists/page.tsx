@@ -7,10 +7,14 @@ import { useState, useEffect, useRef, RefObject } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
 import "./../../app/app.css";
+import {
+  createGameList,
+  deleteGameList,
+  deleteGamesByGameListId
+} from "./../../app/common";
 import { Amplify } from "aws-amplify";
 import outputs from "@/amplify_outputs.json";
 import "@aws-amplify/ui-react/styles.css";
-import { HtmlContext } from "next/dist/server/future/route-modules/app-page/vendored/contexts/entrypoints";
 
 Amplify.configure(outputs);
 
@@ -83,27 +87,12 @@ export default function App() {
         return;
       }
 
-      await createGameList(gameListName, gameListIsPublic, []);
-
-      addListButtonRef.current.removeAttribute("disabled");
-    }
-  }
-
-  async function createGameList(listname: string, ispublic: boolean, tags: string[]) {
-    console.log("Creating new game list with name: " + listname);
-
-    try {
       const userAttributes = await fetchUserAttributes();
       const userId = userAttributes.sub as string;
 
-      await client.models.gamelist.create({
-        ispublic: ispublic,
-        tags: tags,
-        listname: listname,
-        userId: userId,
-      });
-    } catch (error) {
-      console.log(error);
+      await createGameList(userId, gameListName, gameListIsPublic, []);
+
+      addListButtonRef.current.removeAttribute("disabled");
     }
   }
 
@@ -115,39 +104,6 @@ export default function App() {
       deleteGamesByGameListId(gameListId);
       // Then delete the list itself
       deleteGameList(gameListId);
-    }
-  }
-
-  async function deleteGamesByGameListId(listId: string) {
-    console.log("Deleting all games belonging to game list with id: " + listId);
-
-    try {
-      let games = await client.models.game.list({
-        filter: {
-          collectionId: {
-            eq: listId
-          }
-        }
-      });
-
-      games.data.forEach(async (game) => {
-        console.log("Deleting game with id: " + game.id);
-        await client.models.game.delete({
-          id: game.id
-        });
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function deleteGameList(listId: string) {
-    console.log("Deleting game list with id: " + listId);
-
-    try {
-      await client.models.gamelist.delete({ id: listId });
-    } catch (error) {
-      console.log(error);
     }
   }
 

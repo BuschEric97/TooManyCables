@@ -4,10 +4,7 @@ import { Authenticator } from "@aws-amplify/ui-react";
 import {
   fetchUserAttributes,
   updateUserAttribute,
-  type UpdateUserAttributeOutput,
-  type UpdateUserAttributeInput,
 } from "@aws-amplify/auth";
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
@@ -21,15 +18,12 @@ Amplify.configure(outputs);
 const client = generateClient<Schema>();
 
 export default function App() {
-  let username: string;
-  let email: string;
-
-  async function handleFetchUserAttributes() {
+  async function getUserAttributes() {
     try {
       const userAttributes = await fetchUserAttributes();
 
-      username = userAttributes.preferred_username as string;
-      email = userAttributes.email as string;
+      const username = userAttributes.preferred_username as string;
+      const email = userAttributes.email as string;
       (document.getElementById("username") as HTMLInputElement).value = username;
       (document.getElementById("email") as HTMLInputElement).value = email;
     } catch (error) {
@@ -38,21 +32,20 @@ export default function App() {
   }
 
   useEffect(() => {
-    handleFetchUserAttributes();
+    getUserAttributes();
   }, []);
 
-  function handlePreferredUsernameOnChange(e: React.ChangeEvent<HTMLInputElement>) {
-    username = e.target.value;
+  function handleSavePreferredUsername() {
+    const newUsername = (document.getElementById("username") as HTMLInputElement).value;
+    savePreferredUsername(newUsername);
   }
 
-  async function handleSavePreferredUsername() {
+  async function savePreferredUsername(newUsername: string) {
     try {
-      const attributeKey = "preferred_username";
-      const value = username;
-      const output = await updateUserAttribute({
+      await updateUserAttribute({
         userAttribute: {
-          attributeKey,
-          value
+          attributeKey: "preferred_username",
+          value: newUsername,
         }
       });
       console.log("Username updated successfully!");
@@ -74,7 +67,7 @@ export default function App() {
                     <label>Username</label>
                   </td>
                   <td align="left">
-                    <input id="username" value={username} onChange={handlePreferredUsernameOnChange} />
+                    <input id="username" />
                   </td>
                   <td>
                     <button onClick={handleSavePreferredUsername}>Save</button>
@@ -85,7 +78,7 @@ export default function App() {
                     <label>Email</label>
                   </td>
                   <td align="left">
-                    <input id="email" readOnly value={email} />
+                    <input id="email" readOnly />
                   </td>
                 </tr>
               </tbody>
