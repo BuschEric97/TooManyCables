@@ -9,6 +9,7 @@ import React, { useState, useEffect } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
 import "./../../app/app.css";
+import { platformList, statusList } from "./../../app/functions";
 import { Amplify } from "aws-amplify";
 import outputs from "@/amplify_outputs.json";
 import "@aws-amplify/ui-react/styles.css";
@@ -41,7 +42,7 @@ export default function App() {
   }, []);
 
   function handleAddGameCollapse() {
-    let content = document.getElementById("sectionAddNewGame") as HTMLButtonElement;
+    let content = document.getElementById("sectionAddNewGame") as HTMLDivElement;
     if (content?.style.display === "block") {
       content.style.display = "none";
     } else {
@@ -53,7 +54,7 @@ export default function App() {
     const gameName = (document.getElementById("newGameName") as HTMLInputElement).value;
     const gamePlatform = (document.getElementById("newGamePlatform") as HTMLSelectElement).value;
     const gameStatus = (document.getElementById("newGameStatus") as HTMLSelectElement).value;
-    const gameNotes = (document.getElementById("newGameNotes") as HTMLInputElement).value;
+    const gameNotes = (document.getElementById("newGameNotes") as HTMLTextAreaElement).value;
 
     if (gameName == "") {
       console.log("Game Name cannot be empty!");
@@ -122,9 +123,101 @@ export default function App() {
     }
   }
 
-  function handleOpenGameButton(e: React.MouseEvent<HTMLButtonElement>) {
-    const gameId = (e.target as HTMLButtonElement).name;
-    console.log(gameId);
+  async function handleOpenGameButton(e: React.MouseEvent<HTMLButtonElement>) {
+    const selectedGameId = (e.target as HTMLButtonElement).name;
+    let gameDetails = await client.models.game.list({
+      filter: {
+        id: {
+          eq: selectedGameId
+        }
+      }
+    });
+    let content = document.getElementById("sectionGameDetails") as HTMLDivElement;
+    let gameId = document.getElementById("gameId") as HTMLInputElement;
+    let gameName = document.getElementById("gameName") as HTMLInputElement;
+    let gamePlatform = document.getElementById("gamePlatform") as HTMLSelectElement;
+    let gameStatus = document.getElementById("gameStatus") as HTMLSelectElement;
+    let gameNotes = document.getElementById("gameNotes") as HTMLTextAreaElement;
+
+    if (selectedGameId === gameId.value && content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+
+      gameId.value = selectedGameId;
+      gameName.value = gameDetails.data[0].name;
+      gamePlatform.value = gameDetails.data[0].platform as string;
+      gameStatus.value = gameDetails.data[0].status as string;
+      gameNotes.value = gameDetails.data[0].notes as string;
+    }
+  }
+
+  function handleEditGameButton() {
+    const gameId = document.getElementById("gameId") as HTMLInputElement;
+    const gameName = document.getElementById("gameName") as HTMLInputElement;
+    const gamePlatform = document.getElementById("gamePlatform") as HTMLSelectElement;
+    const gameStatus = document.getElementById("gameStatus") as HTMLSelectElement;
+    const gameNotes = document.getElementById("gameNotes") as HTMLTextAreaElement;
+
+    editGame(gameId.value, gameName.value, gamePlatform.value, gameStatus.value, gameNotes.value);
+  }
+
+  async function editGame(gameId: string, gameName: string, gamePlatform: string, gameStatus: string, gameNotes: string) {
+    console.log("Updating game with id: " + gameId);
+
+    try {
+      switch (gameStatus) {
+        case "NYP":
+          await client.models.game.update({
+            id: gameId,
+            platform: gamePlatform,
+            status: "NYP",
+            notes: gameNotes,
+            name: gameName,
+          })
+          break;
+        case "UNF":
+          await client.models.game.update({
+            id: gameId,
+            platform: gamePlatform,
+            status: "UNF",
+            notes: gameNotes,
+            name: gameName,
+          })
+          break;
+        case "CPL":
+          await client.models.game.update({
+            id: gameId,
+            platform: gamePlatform,
+            status: "CPL",
+            notes: gameNotes,
+            name: gameName,
+          })
+          break;
+        case "FPL":
+          await client.models.game.update({
+            id: gameId,
+            platform: gamePlatform,
+            status: "FPL",
+            notes: gameNotes,
+            name: gameName,
+          })
+          break;
+        case "NDL":
+          await client.models.game.update({
+            id: gameId,
+            platform: gamePlatform,
+            status: "NDL",
+            notes: gameNotes,
+            name: gameName,
+          })
+          break;
+        default:
+          console.log("Unknown status entered: " + status);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   function handleDeleteGameButton(e: React.MouseEvent<HTMLButtonElement>) {
@@ -155,11 +248,12 @@ export default function App() {
               {games.map((games) => (
                 <tr key={games.id}>
                   <td align="right">
-                    <label>{games.name}</label>
+                    <label>{games.name} for {platformList[games.platform as string]} - {statusList[games.status as string]}</label>
+                    <div>{games.notes}</div>
                   </td>
                   <td align="left">
                     <button name={games.id} onClick={handleOpenGameButton}>
-                      Open
+                      Edit
                     </button>
                   </td>
                   <td align="left">
@@ -172,7 +266,7 @@ export default function App() {
             </tbody>
           </table>
         </div>
-        <button id="buttonAddNewGame" className="collapsible" onClick={handleAddGameCollapse}>
+        <button id="buttonAddNewGame" onClick={handleAddGameCollapse}>
           Add New Game
         </button>
         <div id="sectionAddNewGame" className="collapsible">
@@ -193,40 +287,9 @@ export default function App() {
                 <td align="left">
                   <select id="newGamePlatform">
                     <option value="">--Please select an Option--</option>
-                    <option value="OTHER">--Other--</option>
-                    <option value="NES">NES</option>
-                    <option value="SNES">SNES</option>
-                    <option value="N64">Nintendo 64</option>
-                    <option value="GCN">GameCube</option>
-                    <option value="WII">Wii</option>
-                    <option value="WIIU">Wii U</option>
-                    <option value="NSW">Nintendo Switch</option>
-                    <option value="NSW2">Nintendo Switch 2</option>
-                    <option value="GB">Game Boy</option>
-                    <option value="GBC">Game Boy Color</option>
-                    <option value="VB">Virtual Boy</option>
-                    <option value="GBA">Game Boy Advance</option>
-                    <option value="DS">Nintendo DS</option>
-                    <option value="3DS">Nintendo 3DS</option>
-                    <option value="N3DS">New Nintendo 3DS</option>
-                    <option value="PS1">PlayStation</option>
-                    <option value="PS2">PlayStation 2</option>
-                    <option value="PS3">PlayStation 3</option>
-                    <option value="PS4">PlayStation 4</option>
-                    <option value="PS5">PlayStation 5</option>
-                    <option value="PSP">PlayStation Portable</option>
-                    <option value="PSVT">PlayStation Vita</option>
-                    <option value="XBOX">Original Xbox</option>
-                    <option value="X360">Xbox 360</option>
-                    <option value="XBX1">Xbox One</option>
-                    <option value="XBXS">Xbox Series X|S</option>
-                    <option value="SMS">Sega Master System</option>
-                    <option value="SGNS">Sega Genesis</option>
-                    <option value="STRN">Sega Saturn</option>
-                    <option value="DCST">Sega Dreamcast</option>
-                    <option value="SGG">Sega Game Gear</option>
-                    <option value="PC">PC Game</option>
-                    <option value="STM">Steam</option>
+                    {Object.keys(platformList).map((platformId) => (
+                      <option key={platformId} value={platformId}>{platformList[platformId]}</option>
+                    ))}
                   </select>
                 </td>
               </tr>
@@ -236,11 +299,9 @@ export default function App() {
                 </td>
                 <td align="left">
                   <select id="newGameStatus">
-                    <option value="NYP">Unplayed</option>
-                    <option value="UNF">Unfinished</option>
-                    <option value="CPL">Completed</option>
-                    <option value="FPL">100% Completed</option>
-                    <option value="NDL">Endless</option>
+                    {Object.keys(statusList).map((statusId) => (
+                      <option key={statusId} value={statusId}>{statusList[statusId]}</option>
+                    ))}
                   </select>
                 </td>
               </tr>
@@ -255,6 +316,59 @@ export default function App() {
               <tr>
                 <td colSpan={2} align="center">
                   <button onClick={handleCreateGameButton}>Add Game</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="sectionGameDetails" className="collapsible">
+          <h2>Edit Game Details</h2>
+          <input className="hiddenData" readOnly id="gameId" />
+          <table>
+            <tbody>
+              <tr>
+                <td align="right">
+                  <label>Game Name</label>
+                </td>
+                <td align="left">
+                  <input id="gameName" />
+                </td>
+              </tr>
+              <tr>
+                <td align="right">
+                  <label>Platform</label>
+                </td>
+                <td align="left">
+                  <select id="gamePlatform">
+                    {Object.keys(platformList).map((platformId) => (
+                      <option key={platformId} value={platformId}>{platformList[platformId]}</option>
+                    ))}
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td align="right">
+                  <label>Completion Status</label>
+                </td>
+                <td align="left">
+                  <select id="gameStatus">
+                    {Object.keys(statusList).map((statusId) => (
+                      <option key={statusId} value={statusId}>{statusList[statusId]}</option>
+                    ))}
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td align="right">
+                  <label>Notes</label>
+                </td>
+                <td align="left">
+                  <textarea rows={10} cols={30} id="gameNotes" />
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={2} align="center">
+                  <button onClick={handleEditGameButton}>Save Changes</button>
                 </td>
               </tr>
             </tbody>
