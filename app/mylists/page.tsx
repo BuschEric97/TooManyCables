@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef, RefObject } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast, ToastContentProps } from "react-toastify";
 import "./../../app/app.css";
 import {
   createGameList,
@@ -100,16 +100,31 @@ export default function App() {
   }
 
   function handleDeleteGameListButton(e: React.MouseEvent<HTMLButtonElement>) {
-    const gameListId = (e.target as HTMLButtonElement).id;
+    const gameListId = (e.target as HTMLButtonElement).name;
 
-    if (window.confirm("Are you sure?")) {
-      // Delete all games associated with the list
-      deleteGamesByGameListId(gameListId);
-      // Then delete the list itself
-      deleteGameList(gameListId);
+    toast(deletionConfirmationToast, {
+      onClose (reason) {
+        if (reason === "yes") {
+          // Delete all games associated with the list
+          deleteGamesByGameListId(gameListId);
+          // Then delete the list itself
+          deleteGameList(gameListId);
 
-      toast.success("Game list deleted successfully!");
-    }
+          toast.success("Game list deleted successfully!");
+        }
+      },
+      position: "bottom-center"
+    });
+  }
+
+  function deletionConfirmationToast({ closeToast }: ToastContentProps) {
+    return ( 
+      <div>
+        Are you sure?
+        <button onClick={() => closeToast("yes")}>Yes</button>
+        <button onClick={() => closeToast("no")}>No</button>
+      </div>
+    )
   }
 
   return (
@@ -136,7 +151,7 @@ export default function App() {
                       </Link>
                     </td>
                     <td align="left">
-                      <button id={gamelists.id} onClick={handleDeleteGameListButton}>
+                      <button name={gamelists.id} onClick={handleDeleteGameListButton}>
                         Delete
                       </button>
                     </td>

@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast, ToastContentProps } from "react-toastify";
 import "./../../app/app.css";
 import {
   platformList,
@@ -112,12 +112,26 @@ export default function App() {
 
   function handleDeleteGameButton(e: React.MouseEvent<HTMLButtonElement>) {
     const gameId = (e.target as HTMLButtonElement).name;
+    
+    toast(deletionConfirmationToast, {
+      onClose (reason) {
+        if (reason === "yes") {
+          deleteGame(gameId);
+          toast.success("Game deleted successfully!");
+        }
+      },
+      position: "bottom-center"
+    });
+  }
 
-    if (window.confirm("Are you sure?")) {
-      deleteGame(gameId);
-    }
-
-    toast.success("Game deleted successfully!");
+  function deletionConfirmationToast({ closeToast }: ToastContentProps) {
+    return ( 
+      <div>
+        Are you sure?
+        <button onClick={() => closeToast("yes")}>Yes</button>
+        <button onClick={() => closeToast("no")}>No</button>
+      </div>
+    )
   }
 
   return (
