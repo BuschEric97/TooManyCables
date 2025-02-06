@@ -1,9 +1,12 @@
 :root {
   --tmc-background-color: #424242;
+  --tmc-background-hover-color: #383838;
   --tmc-input-background-color: #acacac;
   --tmc-input-background-hover-color: #999999;
   --tmc-primary-color: #4f43ae;
   --tmc-secondary-color: #888ae2;
+
+  --toastify-color-dark: var(--tmc-background-hover-color);
 }
 
 body {

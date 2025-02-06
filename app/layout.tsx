@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Suspense } from "react";
-import Link from "next/link";
 import "./app.css";
 import Navbar from "./components/navbar/Navbar"
 import "@aws-amplify/ui-react/styles.css";

@@ -5,9 +5,10 @@ import {
   fetchUserAttributes,
   updateUserAttribute,
 } from "@aws-amplify/auth";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
+import { ToastContainer, toast } from "react-toastify";
 import "./../../app/app.css";
 import { Amplify } from "aws-amplify";
 import outputs from "@/amplify_outputs.json";
@@ -49,6 +50,7 @@ export default function App() {
         }
       });
       console.log("Username updated successfully!");
+      toast.success("Username updated successfully!");
     } catch (error) {
       console.log(error);
     }
@@ -87,6 +89,7 @@ export default function App() {
           </div>
         )}
       </Authenticator>
+      <ToastContainer position="bottom-right" theme="dark" />
     </main>
   );
 }

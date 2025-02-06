@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef, RefObject } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
+import { ToastContainer, toast } from "react-toastify";
 import "./../../app/app.css";
 import {
   createGameList,
@@ -67,8 +68,8 @@ export default function App() {
 
       // Check that game list name is populated
       if (gameListName == "") {
-        console.log("Game List Name cannot be empty!");
-        window.alert("Game List Name cannot be empty!");
+        console.log("Game list needs a name!");
+        toast.error("Game list needs a name!");
         addListButtonRef.current.removeAttribute("disabled");
         return;
       }
@@ -81,8 +82,8 @@ export default function App() {
         }
       });
       if (isDuplicate) {
-        console.log("You already have a game list with that name!");
-        window.alert("You already have a game list with that name!");
+        console.log("Game list name already exists!");
+        toast.error("Game list name already exists!");
         addListButtonRef.current.removeAttribute("disabled");
         return;
       }
@@ -91,6 +92,8 @@ export default function App() {
       const userId = userAttributes.sub as string;
 
       await createGameList(userId, gameListName, gameListIsPublic, []);
+
+      toast.success("Game list created successfully!");
 
       addListButtonRef.current.removeAttribute("disabled");
     }
@@ -104,6 +107,8 @@ export default function App() {
       deleteGamesByGameListId(gameListId);
       // Then delete the list itself
       deleteGameList(gameListId);
+
+      toast.success("Game list deleted successfully!");
     }
   }
 
@@ -172,6 +177,7 @@ export default function App() {
           </div>
         </div>
       </Authenticator>
+      <ToastContainer position="bottom-right" theme="dark" />
     </main>
   );
 }

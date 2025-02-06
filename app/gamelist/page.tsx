@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
+import { ToastContainer, toast } from "react-toastify";
 import "./../../app/app.css";
 import {
   platformList,
@@ -64,6 +65,8 @@ export default function App() {
     }
 
     createGame(listId, gameName, gamePlatform, gameStatus, gameNotes);
+
+    toast.success("Game created successfully!");
   }
 
   async function handleOpenGameButton(e: React.MouseEvent<HTMLButtonElement>) {
@@ -103,6 +106,8 @@ export default function App() {
     const gameNotes = document.getElementById("gameNotes") as HTMLTextAreaElement;
 
     editGame(gameId.value, gameName.value, gamePlatform.value, gameStatus.value, gameNotes.value);
+
+    toast.success("Game updated successfully!");
   }
 
   function handleDeleteGameButton(e: React.MouseEvent<HTMLButtonElement>) {
@@ -111,6 +116,8 @@ export default function App() {
     if (window.confirm("Are you sure?")) {
       deleteGame(gameId);
     }
+
+    toast.success("Game deleted successfully!");
   }
 
   return (
@@ -250,6 +257,7 @@ export default function App() {
           </table>
         </div>
       </div>
+      <ToastContainer position="bottom-right" theme="dark" />
     </main>
   );
 }
