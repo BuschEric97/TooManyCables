@@ -3,30 +3,24 @@ import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 const schema = a.schema({
   game: a
     .model({
-      gameId: a.id().required(),
       collectionId: a.id(),
       collection: a.belongsTo("gamelist", "collectionId"),
       name: a.string().required(),
       platform: a.string(),
-      status: a.enum(["Unplayed", "Unfinished", "Completed", "FullyCompleted"]),
+      // NYP = Not Yet Played, UNF = Unfinished
+      // CPL = Completed, FPL = Fully 100% Completed
+      // NDL = Endless (Cannot be Finished)
+      status: a.enum(["NYP", "UNF", "CPL", "FPL", "NDL"]),
       notes: a.string(),
-    })
-    .identifier(["gameId"]),
+    }),
   gamelist: a
     .model({
       games: a.hasMany("game", "collectionId"),
       tags: a.string().array(),
-      gamelistId: a.id().required(),
-      collectionId: a.id(),
-      collection: a.belongsTo("usergamelists", "collectionId"),
-    })
-    .secondaryIndexes((index) => [index("gamelistId")]),
-  usergamelists: a
-    .model({
-      gamelists: a.hasMany("gamelist", "collectionId"),
+      ispublic: a.boolean(),
+      listname: a.string().required(),
       userId: a.id().required(),
-    })
-    .identifier(["userId"]),
+    }),
 })
 .authorization((allow) => [allow.publicApiKey()]);
 

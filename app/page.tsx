@@ -1,8 +1,5 @@
 "use client";
 
-import { Authenticator } from "@aws-amplify/ui-react";
-import Link from "next/link";
-import { useState, useEffect } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
 import "./../app/app.css";
@@ -18,7 +15,6 @@ export default function App() {
   return (
     <main>
       <h1>Welcome to TMC!</h1>
-        <Link href="/profile"><button>Profile</button></Link>
     </main>
   );
 }
