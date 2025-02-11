@@ -1,12 +1,12 @@
 :root {
   --tmc-background-color: #424242;
-  --tmc-background-hover-color: #383838;
+  --tmc-background-secondary-color: #383838;
   --tmc-input-background-color: #acacac;
   --tmc-input-background-hover-color: #999999;
   --tmc-primary-color: #4f43ae;
   --tmc-secondary-color: #888ae2;
 
-  --toastify-color-dark: var(--tmc-background-hover-color);
+  --toastify-color-dark: var(--tmc-background-secondary-color);
 }
 
 body {
@@ -72,10 +72,34 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+div {
+  display: flex;
+  text-align: center;
+  padding: 0.5em 0.5em;
+}
+div.vertical {
+  flex-direction: column;
+}
+div.horizontal {
+  flex-direction: row;
+}
+div.desktopHorizontal {
+  flex-direction: row;
+}
+div.fullHeight {
+  height: 100%;
+}
+div.fullWidth {
+  width: 100%;
+}
 div.collapsible {
   padding: 0 18px;
   display: none;
-  overflow: hidden;
+}
+div.bordered {
+  border-radius: 8px;
+  border: 2px solid;
+  border-color: var(--tmc-background-secondary-color);
 }
 
 input {
@@ -92,7 +116,7 @@ input:read-only {
   cursor: default;
 }
 
-input.hiddenData {
+.hiddenData {
   display: none;
 }
 
@@ -126,7 +150,7 @@ label {
   font-family: inherit;
 }
 
-ul {
+table {
   padding-inline-start: 0;
   margin-block-start: 0;
   margin-block-end: 0;
@@ -135,19 +159,23 @@ ul {
   flex-direction: column;
   margin: 8px 0;
   border: 1px solid black;
+  border-radius: 8px;
   gap: 1px;
   background-color: black;
   border-radius: 8px;
   overflow: auto;
 }
 
-li {
+tr {
   background-color: var(--tmc-input-background-color);
   padding: 8px;
 }
-
-li:hover {
+tr:hover {
   background: var(--tmc-input-background-hover-color);
+}
+
+td {
+  padding: 8px;
 }
 
 a {
@@ -169,6 +197,10 @@ a {
 /* Mobile */
 @media (max-width: 700px) {
   nav {
+    flex-direction: column;
+  }
+
+  div.desktopHorizontal {
     flex-direction: column;
   }
 }

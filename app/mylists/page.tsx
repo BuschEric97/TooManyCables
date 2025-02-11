@@ -130,17 +130,17 @@ export default function App() {
   return (
     <main>
       <Authenticator signUpAttributes={["preferred_username"]}>
-        <div>
-          <h1>My Game Lists</h1>
-          <div id="sectionGameListList">
+        <div className="vertical">
+          <div id="sectionGameListList" className="vertical">
+            <h1>My Game Lists</h1>
             <table>
               <tbody>
                 {gamelists.map((gamelists) => (
                   <tr key={gamelists.id}>
-                    <td align="right">
-                      <label>{gamelists.listname}</label>
+                    <td>
+                      {gamelists.listname}
                     </td>
-                    <td align="left">
+                    <td>
                       <Link
                         href={{
                           pathname: "/gamelist",
@@ -150,7 +150,7 @@ export default function App() {
                         <button>Open</button>
                       </Link>
                     </td>
-                    <td align="left">
+                    <td>
                       <button name={gamelists.id} onClick={handleDeleteGameListButton}>
                         Delete
                       </button>
@@ -159,36 +159,20 @@ export default function App() {
                 ))}
               </tbody>
             </table>
+            <button id="buttonAddNewGameList" className="collapsible" onClick={handleAddGameListCollapse}>
+              Add New Game List
+            </button>
           </div>
-          <button id="buttonAddNewGameList" className="collapsible" onClick={handleAddGameListCollapse}>
-            Add New Game List
-          </button>
-          <div id="sectionAddNewGameList" className="collapsible">
-            <table>
-              <tbody>
-                <tr>
-                  <td align="right">
-                    <label>Game List Name</label>
-                  </td>
-                  <td align="left">
-                    <input id="newGameListName" />
-                  </td>
-                </tr>
-                <tr>
-                  <td align="right">
-                    <label>Private Game List</label>
-                  </td>
-                  <td align="left">
-                    <input type="checkbox" id="newGameListIsPrivate" />
-                  </td>
-                </tr>
-                <tr>
-                  <td colSpan={2} align="center">
-                    <button ref={addListButtonRef as RefObject<HTMLButtonElement>} onClick={handleCreateGameListButton}>Add Game List</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <div id="sectionAddNewGameList" className="collapsible vertical bordered">
+            <div className="horizontal">
+              <label>Game List Name</label>
+              <input id="newGameListName" />
+            </div>
+            <div className="horizontal">
+              <label>Private Game List</label>
+              <input type="checkbox" id="newGameListIsPrivate" />
+            </div>
+            <button ref={addListButtonRef as RefObject<HTMLButtonElement>} onClick={handleCreateGameListButton}>Add Game List</button>
           </div>
         </div>
       </Authenticator>

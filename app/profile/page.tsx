@@ -60,31 +60,17 @@ export default function App() {
     <main>
       <Authenticator signUpAttributes={["preferred_username"]}>
         {({ signOut }) => (
-          <div>
+          <div className="vertical">
             <h1>TMC User Profile</h1>
-            <table>
-              <tbody>
-                <tr>
-                  <td align="right">
-                    <label>Username</label>
-                  </td>
-                  <td align="left">
-                    <input id="username" />
-                  </td>
-                  <td>
-                    <button onClick={handleSavePreferredUsername}>Save</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td align="right">
-                    <label>Email</label>
-                  </td>
-                  <td align="left">
-                    <input id="email" readOnly />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div className="horizontal">
+              <label>Username</label>
+              <input id="username" />
+              <button onClick={handleSavePreferredUsername}>Save</button>
+            </div>
+            <div className="horizontal">
+              <label>Email</label>
+              <input id="email" readOnly />
+            </div>
             <button onClick={signOut}>Sign Out</button>
           </div>
         )}

@@ -136,139 +136,109 @@ export default function App() {
 
   return (
     <main>
-      <div>
-        <h1>TMC Game List Viewer</h1>
-        <div id="sectionGameList">
-          <table>
-            <tbody>
-              {games.map((games) => (
-                <tr key={games.id}>
-                  <td align="right">
-                    <label>{games.name} for {platformList[games.platform as string]} - {statusList[games.status as string]}</label>
-                    <div>{games.notes}</div>
-                  </td>
-                  <td align="left">
-                    <button name={games.id} onClick={handleOpenGameButton}>
-                      Edit
-                    </button>
-                  </td>
-                  <td align="left">
-                    <button name={games.id} onClick={handleDeleteGameButton}>
-                      Delete
-                    </button>
-                  </td>
+      <div className="desktopHorizontal">
+        <div className="vertical">
+          <h1>Game List Details</h1>
+        </div>
+        <div className="vertical">
+          <div id="sectionGameList" className="vertical">
+            <h1>Games</h1>
+            <table>
+              <tbody>
+                <tr>
+                  <th>Name</th>
+                  <th>Platform</th>
+                  <th>Status</th>
+                  <th></th>
+                  <th></th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <button id="buttonAddNewGame" onClick={handleAddGameCollapse}>
-          Add New Game
-        </button>
-        <div id="sectionAddNewGame" className="collapsible">
-          <table>
-            <tbody>
-              <tr>
-                <td align="right">
-                  <label>Game Name</label>
-                </td>
-                <td align="left">
-                  <input id="newGameName" />
-                </td>
-              </tr>
-              <tr>
-                <td align="right">
-                  <label>Platform</label>
-                </td>
-                <td align="left">
-                  <select id="newGamePlatform">
-                    <option value="">--Please select an Option--</option>
-                    {Object.keys(platformList).map((platformId) => (
-                      <option key={platformId} value={platformId}>{platformList[platformId]}</option>
-                    ))}
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td align="right">
-                  <label>Completion Status</label>
-                </td>
-                <td align="left">
-                  <select id="newGameStatus">
-                    {Object.keys(statusList).map((statusId) => (
-                      <option key={statusId} value={statusId}>{statusList[statusId]}</option>
-                    ))}
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td align="right">
-                  <label>Notes</label>
-                </td>
-                <td align="left">
-                  <textarea rows={10} cols={30} id="newGameNotes" />
-                </td>
-              </tr>
-              <tr>
-                <td colSpan={2} align="center">
-                  <button onClick={handleCreateGameButton}>Add Game</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div id="sectionGameDetails" className="collapsible">
-          <h2>Edit Game Details</h2>
-          <input className="hiddenData" readOnly id="gameId" />
-          <table>
-            <tbody>
-              <tr>
-                <td align="right">
-                  <label>Game Name</label>
-                </td>
-                <td align="left">
-                  <input id="gameName" />
-                </td>
-              </tr>
-              <tr>
-                <td align="right">
-                  <label>Platform</label>
-                </td>
-                <td align="left">
-                  <select id="gamePlatform">
-                    {Object.keys(platformList).map((platformId) => (
-                      <option key={platformId} value={platformId}>{platformList[platformId]}</option>
-                    ))}
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td align="right">
-                  <label>Completion Status</label>
-                </td>
-                <td align="left">
-                  <select id="gameStatus">
-                    {Object.keys(statusList).map((statusId) => (
-                      <option key={statusId} value={statusId}>{statusList[statusId]}</option>
-                    ))}
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td align="right">
-                  <label>Notes</label>
-                </td>
-                <td align="left">
-                  <textarea rows={10} cols={30} id="gameNotes" />
-                </td>
-              </tr>
-              <tr>
-                <td colSpan={2} align="center">
-                  <button onClick={handleEditGameButton}>Save Changes</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                {games.map((games) => (
+                  <tr key={games.id}>
+                    <td>
+                      {games.name}
+                    </td>
+                    <td>
+                      {platformList[games.platform as string]}
+                    </td>
+                    <td>
+                      {statusList[games.status as string]}
+                    </td>
+                    <td>
+                      <button name={games.id} onClick={handleOpenGameButton}>
+                        Edit
+                      </button>
+                    </td>
+                    <td>
+                      <button name={games.id} onClick={handleDeleteGameButton}>
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button id="buttonAddNewGame" onClick={handleAddGameCollapse}>
+              Add New Game
+            </button>
+          </div>
+          <div id="sectionAddNewGame" className="collapsible bordered vertical">
+            <h2>Add New Game Details</h2>
+            <div className="horizontal">
+              <label>Game Name</label>
+              <input id="newGameName" />
+            </div>
+            <div className="horizontal">
+              <label>Platform</label>
+              <select id="newGamePlatform">
+                <option value="">--Please select an Option--</option>
+                {Object.keys(platformList).map((platformId) => (
+                  <option key={platformId} value={platformId}>{platformList[platformId]}</option>
+                ))}
+              </select>
+            </div>
+            <div className="horizontal">
+              <label>Completion Status</label>
+              <select id="newGameStatus">
+                {Object.keys(statusList).map((statusId) => (
+                  <option key={statusId} value={statusId}>{statusList[statusId]}</option>
+                ))}
+              </select>
+            </div>
+            <div className="vertical">
+              <label>Notes</label>
+              <textarea rows={10} cols={30} id="newGameNotes" />
+            </div>
+            <button onClick={handleCreateGameButton}>Add Game</button>
+          </div>
+          <div id="sectionGameDetails" className="collapsible bordered vertical">
+            <input className="hiddenData" readOnly id="gameId" />
+            <h2>Edit Game Details</h2>
+            <div className="horizontal">
+              <label>Game Name</label>
+              <input id="gameName" />
+            </div>
+            <div className="horizontal">
+              <label>Platform</label>
+              <select id="gamePlatform">
+                {Object.keys(platformList).map((platformId) => (
+                  <option key={platformId} value={platformId}>{platformList[platformId]}</option>
+                ))}
+              </select>
+            </div>
+            <div className="horizontal">
+              <label>Completion Status</label>
+              <select id="gameStatus">
+                {Object.keys(statusList).map((statusId) => (
+                  <option key={statusId} value={statusId}>{statusList[statusId]}</option>
+                ))}
+              </select>
+            </div>
+            <div className="vertical">
+              <label>Notes</label>
+              <textarea rows={10} cols={30} id="gameNotes" />
+            </div>
+            <button onClick={handleEditGameButton}>Save Changes</button>
+          </div>
         </div>
       </div>
       <ToastContainer position="bottom-right" theme="dark" />
