@@ -11,7 +11,8 @@ import "./../../app/app.css";
 import {
   createGameList,
   deleteGameList,
-  deleteGamesByGameListId
+  deleteGamesByGameListId,
+  getTagListFromString
 } from "./../../app/common";
 import { Amplify } from "aws-amplify";
 import outputs from "@/amplify_outputs.json";
@@ -65,6 +66,7 @@ export default function App() {
       // Get game list creation parameters
       const gameListName = (document.getElementById("newGameListName") as HTMLInputElement).value;
       const gameListIsPublic = !(document.getElementById("newGameListIsPrivate") as HTMLInputElement).checked;
+      const gameListTags = await getTagListFromString((document.getElementById("newGameListTags") as HTMLTextAreaElement).value);
 
       // Check that game list name is populated
       if (gameListName == "") {
@@ -91,7 +93,7 @@ export default function App() {
       const userAttributes = await fetchUserAttributes();
       const userId = userAttributes.sub as string;
 
-      await createGameList(userId, gameListName, gameListIsPublic, []);
+      await createGameList(userId, gameListName, gameListIsPublic, gameListTags);
 
       toast.success("Game list created successfully!");
 
@@ -171,6 +173,10 @@ export default function App() {
             <div className="horizontal">
               <label>Private Game List</label>
               <input type="checkbox" id="newGameListIsPrivate" />
+            </div>
+            <div className="horizontal">
+              <label>Tags</label>
+              <textarea rows={3} cols={30} id="newGameListTags" />
             </div>
             <button ref={addListButtonRef as RefObject<HTMLButtonElement>} onClick={handleCreateGameListButton}>Add Game List</button>
           </div>

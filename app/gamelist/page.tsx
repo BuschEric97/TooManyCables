@@ -12,6 +12,8 @@ import {
   createGame,
   editGame,
   deleteGame,
+  getTagListFromString,
+  createStringFromTagList,
 } from "./../../app/common";
 import { Amplify } from "aws-amplify";
 import outputs from "@/amplify_outputs.json";
@@ -52,11 +54,12 @@ export default function App() {
     }
   }
 
-  function handleCreateGameButton() {
+  async function handleCreateGameButton() {
     const gameName = (document.getElementById("newGameName") as HTMLInputElement).value;
     const gamePlatform = (document.getElementById("newGamePlatform") as HTMLSelectElement).value;
     const gameStatus = (document.getElementById("newGameStatus") as HTMLSelectElement).value;
     const gameNotes = (document.getElementById("newGameNotes") as HTMLTextAreaElement).value;
+    const gameTags = await getTagListFromString((document.getElementById("newGameTags") as HTMLTextAreaElement).value);
 
     if (gameName == "") {
       console.log("Game Name cannot be empty!");
@@ -64,7 +67,7 @@ export default function App() {
       return;
     }
 
-    createGame(listId, gameName, gamePlatform, gameStatus, gameNotes);
+    createGame(listId, gameName, gamePlatform, gameStatus, gameNotes, gameTags);
 
     toast.success("Game created successfully!");
   }
@@ -84,6 +87,7 @@ export default function App() {
     let gamePlatform = document.getElementById("gamePlatform") as HTMLSelectElement;
     let gameStatus = document.getElementById("gameStatus") as HTMLSelectElement;
     let gameNotes = document.getElementById("gameNotes") as HTMLTextAreaElement;
+    let gameTags = document.getElementById("gameTags") as HTMLTextAreaElement;
 
     if (selectedGameId === gameId.value && content.style.display === "block") {
       content.style.display = "none";
@@ -95,17 +99,19 @@ export default function App() {
       gamePlatform.value = gameDetails.data[0].platform as string;
       gameStatus.value = gameDetails.data[0].status as string;
       gameNotes.value = gameDetails.data[0].notes as string;
+      gameTags.value = await createStringFromTagList(gameDetails.data[0].tags as string[]);
     }
   }
 
-  function handleEditGameButton() {
-    const gameId = document.getElementById("gameId") as HTMLInputElement;
-    const gameName = document.getElementById("gameName") as HTMLInputElement;
-    const gamePlatform = document.getElementById("gamePlatform") as HTMLSelectElement;
-    const gameStatus = document.getElementById("gameStatus") as HTMLSelectElement;
-    const gameNotes = document.getElementById("gameNotes") as HTMLTextAreaElement;
+  async function handleEditGameButton() {
+    const gameId = (document.getElementById("gameId") as HTMLInputElement).value;
+    const gameName = (document.getElementById("gameName") as HTMLInputElement).value;
+    const gamePlatform = (document.getElementById("gamePlatform") as HTMLSelectElement).value;
+    const gameStatus = (document.getElementById("gameStatus") as HTMLSelectElement).value;
+    const gameNotes = (document.getElementById("gameNotes") as HTMLTextAreaElement).value;
+    const gameTags = await getTagListFromString((document.getElementById("gameTags") as HTMLTextAreaElement).value);
 
-    editGame(gameId.value, gameName.value, gamePlatform.value, gameStatus.value, gameNotes.value);
+    editGame(gameId, gameName, gamePlatform, gameStatus, gameNotes, gameTags);
 
     toast.success("Game updated successfully!");
   }
@@ -208,6 +214,10 @@ export default function App() {
               <label>Notes</label>
               <textarea rows={10} cols={30} id="newGameNotes" />
             </div>
+            <div className="horizontal">
+              <label>Tags</label>
+              <textarea rows={3} cols={30} id="newGameTags" />
+            </div>
             <button onClick={handleCreateGameButton}>Add Game</button>
           </div>
           <div id="sectionGameDetails" className="collapsible bordered vertical">
@@ -236,6 +246,10 @@ export default function App() {
             <div className="vertical">
               <label>Notes</label>
               <textarea rows={10} cols={30} id="gameNotes" />
+            </div>
+            <div className="horizontal">
+              <label>Tags</label>
+              <textarea rows={3} cols={30} id="gameTags" />
             </div>
             <button onClick={handleEditGameButton}>Save Changes</button>
           </div>

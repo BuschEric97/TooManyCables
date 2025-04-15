@@ -48,7 +48,7 @@ export const statusList: { [key: string]: string } = {
   "NDL": "Endless",
 };
 
-export async function createGame(listId: string, name: string, platform: string, status: string, notes: string) {
+export async function createGame(listId: string, name: string, platform: string, status: string, notes: string, tags: string[]) {
   console.log("Creating new game with name: " + name);
 
   try {
@@ -63,6 +63,7 @@ export async function createGame(listId: string, name: string, platform: string,
           platform: platform,
           status: status,
           notes: notes,
+          tags: tags,
           collectionId: listId,
         });
         break;
@@ -74,7 +75,7 @@ export async function createGame(listId: string, name: string, platform: string,
   }
 }
 
-export async function editGame(gameId: string, gameName: string, gamePlatform: string, gameStatus: string, gameNotes: string) {
+export async function editGame(gameId: string, gameName: string, gamePlatform: string, gameStatus: string, gameNotes: string, gameTags: string[]) {
   console.log("Updating game with id: " + gameId);
 
   try {
@@ -89,6 +90,7 @@ export async function editGame(gameId: string, gameName: string, gamePlatform: s
           platform: gamePlatform,
           status: gameStatus,
           notes: gameNotes,
+          tags: gameTags,
           name: gameName,
         })
         break;
@@ -156,4 +158,25 @@ export async function deleteGameList(listId: string) {
   } catch (error) {
     console.log(error);
   }
+}
+
+export async function getTagListFromString(tags: string) {
+  let splitTags: string[] = tags.split("|");
+  let taglist: string[] = splitTags;
+
+  // clean up each tag
+  splitTags.forEach((tag, index) => {
+    taglist[index] = tag.trim();
+  });
+
+  return taglist;
+}
+
+export async function createStringFromTagList(taglist: string[]) {
+  if (taglist == null) return "";
+  let tags: string = "";
+  taglist.forEach((tag) => {
+    tags = tags + "|" + tag;
+  })
+  return tags;
 }
