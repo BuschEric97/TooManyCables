@@ -11,6 +11,7 @@ const schema = a.schema({
       // CPL = Completed, FPL = Fully 100% Completed
       // NDL = Endless (Cannot be Finished)
       status: a.enum(["NYP", "UNF", "CPL", "FPL", "NDL"]),
+      tags: a.string().array(),
       notes: a.string(),
     }),
   gamelist: a
