@@ -127,6 +127,22 @@ export async function createGameList(userId: string, listname: string, ispublic:
   }
 }
 
+export async function editGameList(userId: string, listname: string, ispublic: boolean, tags: string[], id: string) {
+  console.log("Editing game list with id: " + userId);
+
+  try {
+    await client.models.gamelist.update({
+      userId: userId,
+      listname: listname,
+      ispublic: ispublic,
+      tags: tags,
+      id: id,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export async function deleteGamesByGameListId(listId: string) {
   console.log("Deleting all games belonging to game list with id: " + listId);
 

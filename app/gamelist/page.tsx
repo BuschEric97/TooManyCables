@@ -63,7 +63,7 @@ export default function App() {
 
     if (gameName == "") {
       console.log("Game Name cannot be empty!");
-      window.alert("Game Name cannot be empty!");
+      toast.error("Game Name cannot be empty!");
       return;
     }
 

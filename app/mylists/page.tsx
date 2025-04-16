@@ -12,7 +12,9 @@ import {
   createGameList,
   deleteGameList,
   deleteGamesByGameListId,
-  getTagListFromString
+  editGameList,
+  getTagListFromString,
+  createStringFromTagList,
 } from "./../../app/common";
 import { Amplify } from "aws-amplify";
 import outputs from "@/amplify_outputs.json";
@@ -101,6 +103,55 @@ export default function App() {
     }
   }
 
+  async function handleOpenGameListDetails(e: React.MouseEvent<HTMLButtonElement>) {
+    const selectedGameListId = (e.target as HTMLButtonElement).name;
+    let gameDetails = await client.models.gamelist.list({
+      filter: {
+        id: {
+          eq: selectedGameListId
+        }
+      }
+    });
+    let content = document.getElementById("sectionGameListDetails") as HTMLDivElement;
+    let gameListId = document.getElementById("gameListId") as HTMLInputElement;
+    let gameListName = document.getElementById("gameListName") as HTMLInputElement;
+    let gameListIsPrivate = document.getElementById("gameListIsPrivate") as HTMLInputElement;
+    let gameListTags = document.getElementById("gameListTags") as HTMLTextAreaElement;
+    
+    if (selectedGameListId === gameListId.value && content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+
+      gameListId.value = selectedGameListId;
+      gameListName.value = gameDetails.data[0].listname as string;
+      gameListIsPrivate.checked = !(gameDetails.data[0].ispublic as boolean);
+      gameListTags.value = await createStringFromTagList(gameDetails.data[0].tags as string[]);
+    }
+  }
+
+  async function handleEditGameListButton() {
+    // Get game list params
+    const gameListName = (document.getElementById("gameListName") as HTMLInputElement).value;
+    const gameListIsPrivate = !(document.getElementById("gameListIsPrivate") as HTMLInputElement).checked;
+    const gameListTags = await getTagListFromString((document.getElementById("gameListTags") as HTMLTextAreaElement).value);
+    const gameListId = (document.getElementById("gameListId") as HTMLInputElement).value;
+
+    // Check that game list name is populated
+    if (gameListName == "") {
+      console.log("Game list needs a name!");
+      toast.error("Game list needs a name!");
+      return;
+    }
+
+    const userAttributes = await fetchUserAttributes();
+    const userId = userAttributes.sub as string;
+
+    await editGameList(userId, gameListName, gameListIsPrivate, gameListTags, gameListId);
+
+    toast.success("Game list updated successfully!");
+  }
+
   function handleDeleteGameListButton(e: React.MouseEvent<HTMLButtonElement>) {
     const gameListId = (e.target as HTMLButtonElement).name;
 
@@ -153,6 +204,11 @@ export default function App() {
                       </Link>
                     </td>
                     <td>
+                      <button name={gamelists.id} onClick={handleOpenGameListDetails}>
+                        Edit
+                      </button>
+                    </td>
+                    <td>
                       <button name={gamelists.id} onClick={handleDeleteGameListButton}>
                         Delete
                       </button>
@@ -179,6 +235,22 @@ export default function App() {
               <textarea rows={3} cols={30} id="newGameListTags" />
             </div>
             <button ref={addListButtonRef as RefObject<HTMLButtonElement>} onClick={handleCreateGameListButton}>Add Game List</button>
+          </div>
+          <div id="sectionGameListDetails" className="collapsible vertical bordered">
+            <input className="hiddenData" readOnly id="gameListId" />
+            <div className="horizontal">
+              <label>Game List Name</label>
+              <input id="gameListName" />
+            </div>
+            <div className="horizontal">
+              <label>Private Game List</label>
+              <input type="checkbox" id="gameListIsPrivate" />
+            </div>
+            <div className="horizontal">
+              <label>Tags</label>
+              <textarea rows={3} cols={30} id="gameListTags" />
+            </div>
+            <button ref={addListButtonRef as RefObject<HTMLButtonElement>} onClick={handleEditGameListButton}>Save Changes</button>
           </div>
         </div>
       </Authenticator>
